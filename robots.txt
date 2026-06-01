@@ -1,4 +1,4 @@
-Sitemap: https://tlienart.github.io/FranklinTemplates.jl/sitemap.xml
+Sitemap: https://bitsarebits.github.io/gsoc2026-gridap/sitemap.xml
 
 User-agent: *
 Disallow:
