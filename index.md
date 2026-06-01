@@ -4,7 +4,7 @@
 
 # Reduced Order Modelling with Neural Operators
 
-* **Contributor:** Isaia Zollo - [GitHub](https://github.com/bitsarebits)
+* **Contributor:** Isaia Zollo - ~~~<a href="https://github.com/bitsarebits" target="_blank">GitHub</a>~~~
 * **Mentors:** Nicholas Mueller, Eric Neiva, Martina Gatti
 * **Organization:** Gridap (under the NumFOCUS umbrella)
 
