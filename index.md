@@ -66,11 +66,11 @@ We are still finalizing the roster, but the current idea is to expose a few simp
 
 **Date:** June 25, 2026
 
-As the complexity of the project grew, Pluto notebooks started to show their limits. I needed a more robust way to manage hyperparameters, physical variables, and model weights. I migrated the workflow to pure Julia scripts orchestrated by `DrWatson.jl`.
+As the complexity of the project grew, Pluto notebooks started to show their limits. I needed a more robust way to manage hyperparameters, physical variables, and model weights. I migrated the workflow to a dedicated suite of [Julia scripts](https://github.com/bitsarebits/Gridap-NeuralOperators-GSoC2026) orchestrated by `DrWatson.jl`.
 
 To prevent redundant and expensive FE computations, I built a custom caching mechanism called `HashRegistry.jl`. It computes a SHA-256 hash of the simulation parameters; if a pipeline step (data generation, model training, or evaluation) is already in the cache, it instantly loads the results. I also integrated Learning Rate Schedulers (only `CosineAnnealing` and `ReduceLROnPlateau` at the moment).
 
-With so many parameters to tweak, interacting solely via the REPL became impractical. I decided to build a web dashboard to act as a graphical orchestrator.
+With so many parameters to tweak, interacting solely via the REPL became impractical. I decided to build an [interactive web dashboard](https://bitsarebits.github.io/Gridap-NeuralOperators-GSoC2026/) to act as a graphical orchestrator.
 
 - **The Backend:** Built entirely in Julia using `Oxygen.jl`, serving REST APIs and WebSockets to stream real-time training losses and state updates.
 
