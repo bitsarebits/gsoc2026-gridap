@@ -1,6 +1,8 @@
-@def title = "GSoC 2026: Neural Operators in Gridap.jl"
-@def hasmath = true
-@def hascode = true
++++
+title = "GSoC 2026: Neural Operators in Gridap.jl"
+hasmath = true
+hascode = true
++++
 
 # Reduced Order Modelling with Neural Operators
 
