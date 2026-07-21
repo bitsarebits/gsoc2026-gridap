@@ -107,3 +107,11 @@ I also added a **Cloud Sync & Fine-Tuning** feature. To make collaboration easie
 My biggest nemesis this week? **XLA Compilation times**. The first simulation on the server takes a long time to boot due to LLVM/XLA compilation via `Reactant.jl`. I've tried everything to shave off these 3-4 minutes—custom Julia sysimages, Level 1 `.ji` precompilation, and server warmup scripts. While the sysimage drastically improved library loading times, the XLA compilation lock during the first JIT pass remains a tough problem to solve. I've also fortified the `Oxygen.jl` server with thread mutexes and clean shutdown handling to manage active WebSocket simulations gracefully.
 
 It's been a challenging but incredibly rewarding first half. Focusing now on Phase 2!
+
+---
+
+> **AI Usage Disclaimer:** To accelerate development on the non-core aspects of this project (specifically the React frontend, server boilerplate, and English proofreading), I utilized Google Gemini as a conversational assistant. No autonomous AI coding agents were used; I retained full architectural control, and all the core Julia mechanics, mathematical implementations, and design decisions were made entirely by me.
+
+~~~<div style="font-size: 0.8em; color: #666; text-align: center; margin-top: 2rem;">~~~
+~~~<em>"Google Summer of Code" and "GSoC" are trademarks of Google. NumFOCUS is a trademark of NumFOCUS. This project is an independent open-source contribution and is not officially endorsed by or affiliated with Google or NumFOCUS.</em>~~~
+~~~</div>~~~
