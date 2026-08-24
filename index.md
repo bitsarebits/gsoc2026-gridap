@@ -4,16 +4,16 @@ hasmath = true
 hascode = true
 +++
 
-# Reduced Order Modelling with Neural Operators
+# Reduced Order Modeling with Neural Operators
 
 * **Contributor:** Isaia Zollo - ~~~<a href="https://github.com/bitsarebits" target="_blank">GitHub</a>~~~
 * **Mentors:** Nicholas Mueller, Eric Neiva, Martina Gatti
 * **Organization:** Gridap (under the NumFOCUS umbrella)
 
-**Project Links:**
-* **Scripts & Backend:** ~~~<a href="https://github.com/bitsarebits/Gridap-NeuralOperators-GSoC2026" target="_blank">GitHub Repository</a>~~~
-* **Live Dashboard:** ~~~<a href="https://bitsarebits.github.io/Gridap-NeuralOperators-GSoC2026/" target="_blank">Online Experiment Gallery</a>~~~
-
+### GSoC 2026 Final Deliverables
+* **Phase 1 Experiments & Backend:** ~~~<a href="https://github.com/bitsarebits/Gridap-NeuralOperators-GSoC2026" target="_blank">GitHub Repository</a>~~~
+* **Interactive Dashboard:** ~~~<a href="https://bitsarebits.github.io/Gridap-NeuralOperators-GSoC2026/" target="_blank">Online Experiment Gallery</a>~~~
+* **Phase 2 GridapROMs.jl Integration** ~~~<a href="https://github.com/gridap/GridapROMs.jl/pull/72" target="_blank">Pull Request on GridapROMs.jl</a>~~~
 
 Notes and progress from my GSoC 2026 project. The goal is to bring Neural Operators into the ~~~<a href="https://github.com/gridap/Gridap.jl" target="_blank">Gridap.jl</a>~~~ ecosystem, specifically extending the ~~~<a href="https://github.com/gridap/GridapROMs.jl" target="_blank">GridapROMs.jl</a>~~~ package to enable fast, nonlinear PDE simulations.
 
