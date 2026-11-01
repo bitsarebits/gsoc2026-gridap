@@ -8,15 +8,17 @@ This repository contains the source code and markdown files for my developer blo
 The project focuses on integrating Neural Operators into the `Gridap.jl` ecosystem (specifically `GridapROMs.jl`), participating under the **NumFOCUS** umbrella.
 
 ## Quick Links
-* **[Read the full Devlog](https://bitsarebits.github.io/gsoc2026-gridap/)** to follow  weekly updates, technical decisions, and architectural decisions.
-* **[Main Project Repository](https://github.com/bitsarebits/Gridap-NeuralOperators-GSoC2026)** containing the Julia source code and the web server to run new simulations.
-* **[Live Interactive Dashboard](https://bitsarebits.github.io/Gridap-NeuralOperators-GSoC2026/)** to view live experiments and Neural Operator training loops.
+
+- **[Read the full Devlog](https://bitsarebits.github.io/gsoc2026-gridap/)** to follow weekly updates, technical decisions, and architectural decisions.
+- **[Main Project Repository](https://github.com/bitsarebits/Gridap-NeuralOperators-GSoC2026)** containing the Julia source code and the web server to run new simulations.
+- **[Live Interactive Dashboard](https://bitsarebits.github.io/Gridap-NeuralOperators-GSoC2026/)** to view live experiments and Neural Operator training loops.
 
 </br>
 
-
 #### AI Usage Disclaimer
-*While all the core Julia code, mathematical logic, and architectural design choices for the GSoC project were made entirely by me, I utilized Google Gemini as a conversational assistant to help with English proofreading and formatting for these blog posts.*
+
+_While all the core Julia code, mathematical logic, and architectural design choices for the GSoC project were made entirely by me, I utilized Google Gemini as a conversational assistant to help with English proofreading and formatting for these blog posts._
 
 ---
-<sub>*"Google Summer of Code" and "GSoC" are trademarks of Google. NumFOCUS is a trademark of NumFOCUS. This project is an independent open-source contribution and is not officially endorsed by or affiliated with Google or NumFOCUS.*</sub>
+
+<sub>_"Google Summer of Code" and "GSoC" are trademarks of Google. NumFOCUS is a trademark of NumFOCUS. This project is an independent open-source contribution and is not officially endorsed by or affiliated with Google or NumFOCUS._</sub>
