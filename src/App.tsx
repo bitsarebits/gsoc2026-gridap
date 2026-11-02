@@ -5,8 +5,10 @@ import {
     BookOpen,
     Calendar,
     Check,
+    ChevronDown,
     Copy,
     GitPullRequest,
+    List,
     Moon,
     Sun,
     Activity,
@@ -160,7 +162,9 @@ export default function App() {
     const [darkMode, setDarkMode] = useState<boolean>(() => {
         if (typeof window !== "undefined") {
             const saved = localStorage.getItem("theme");
-            if (saved) return saved === "dark";
+            if (saved === "dark" || saved === "light") {
+                return saved === "dark";
+            }
             return window.matchMedia("(prefers-color-scheme: dark)").matches;
         }
         return false;
@@ -168,17 +172,38 @@ export default function App() {
 
     const [activeId, setActiveId] = useState<string>("kicking-off");
     const [readingProgress, setReadingProgress] = useState<number>(0);
+    const [mobileTocOpen, setMobileTocOpen] = useState<boolean>(false);
 
     useEffect(() => {
         const root = document.documentElement;
         if (darkMode) {
             root.classList.add("dark");
-            localStorage.setItem("theme", "dark");
         } else {
             root.classList.remove("dark");
-            localStorage.setItem("theme", "light");
         }
     }, [darkMode]);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        const handleChange = (e: MediaQueryListEvent) => {
+            setDarkMode(e.matches);
+            localStorage.removeItem("theme");
+        };
+
+        mediaQuery.addEventListener("change", handleChange);
+        return () => mediaQuery.removeEventListener("change", handleChange);
+    }, []);
+
+    const toggleTheme = () => {
+        setDarkMode((prev) => {
+            const next = !prev;
+            localStorage.setItem("theme", next ? "dark" : "light");
+            return next;
+        });
+    };
+
+    const activeNavItem =
+        TIMELINE_NAV.find((item) => item.id === activeId) ?? TIMELINE_NAV[0];
 
     useEffect(() => {
         const handleScroll = () => {
@@ -218,14 +243,14 @@ export default function App() {
             </div>
 
             {/* Header */}
-            <header className="sticky top-0 z-30 backdrop-blur-md bg-slate-50/85 dark:bg-zinc-950/85 border-b border-slate-200/80 dark:border-zinc-800/80">
-                <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
+            <header className="sticky top-0 z-30 backdrop-blur-md bg-slate-50/90 dark:bg-zinc-950/90 border-b border-slate-200/80 dark:border-zinc-800/80">
+                <div className="max-w-5xl mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-3 shrink-0">
                         <a
                             href="https://bitsarebits.github.io/"
-                            className="inline-flex items-center gap-1.5 text-xs font-mono font-medium px-2.5 py-1.5 rounded-lg bg-slate-200/70 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                            className="inline-flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-xs font-mono font-medium px-2 sm:px-2.5 py-1.5 rounded-lg bg-slate-200/70 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap"
                         >
-                            <ArrowLeft className="w-3.5 h-3.5" />
+                            <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
                             <span>Portfolio</span>
                         </a>
                         <span className="hidden sm:inline-block text-slate-300 dark:text-zinc-700">
@@ -236,16 +261,19 @@ export default function App() {
                         </span>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
                         <a
                             href="https://bitsarebits.github.io/Gridap-NeuralOperators-GSoC2026/"
                             target="_blank"
                             rel="noreferrer"
-                            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/60 hover:bg-emerald-100/70 transition-colors"
+                            className="inline-flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-xs font-medium px-2 sm:px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/60 hover:bg-emerald-100/70 transition-colors whitespace-nowrap"
                         >
-                            <Activity className="w-3.5 h-3.5" />
-                            <span>Live Dashboard</span>
-                            <ArrowUpRight className="w-3.5 h-3.5" />
+                            <Activity className="w-3.5 h-3.5 shrink-0" />
+                            <span className="sm:hidden">Dashboard</span>
+                            <span className="hidden sm:inline">
+                                Live Dashboard
+                            </span>
+                            <ArrowUpRight className="w-3.5 h-3.5 shrink-0 hidden sm:inline" />
                         </a>
 
                         {/* GitHub SVG Icon */}
@@ -253,7 +281,7 @@ export default function App() {
                             href="https://github.com/bitsarebits"
                             target="_blank"
                             rel="noreferrer"
-                            className="text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors"
+                            className="p-1.5 text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors"
                             aria-label="GitHub"
                         >
                             <svg
@@ -265,7 +293,7 @@ export default function App() {
                         </a>
 
                         <button
-                            onClick={() => setDarkMode(!darkMode)}
+                            onClick={toggleTheme}
                             className="p-2 rounded-lg bg-slate-200/60 dark:bg-zinc-800/60 hover:bg-slate-200 dark:hover:bg-zinc-800 text-slate-700 dark:text-zinc-300 transition-colors"
                             aria-label="Toggle theme"
                         >
@@ -277,10 +305,62 @@ export default function App() {
                         </button>
                     </div>
                 </div>
+
+                {/* Indice Mobile & Tablet (visibile solo sotto lg) */}
+                <div className="lg:hidden border-t border-slate-200/70 dark:border-zinc-800/70 px-4 sm:px-6">
+                    <button
+                        type="button"
+                        onClick={() => setMobileTocOpen((prev) => !prev)}
+                        className="w-full py-2.5 flex items-center justify-between gap-2 text-xs text-slate-700 dark:text-zinc-300"
+                        aria-expanded={mobileTocOpen}
+                    >
+                        <span className="flex items-center gap-2 min-w-0">
+                            <List className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+                            <span className="font-mono text-[11px] text-slate-400 dark:text-zinc-500 shrink-0">
+                                {activeNavItem.date} ·
+                            </span>
+                            <span className="font-medium truncate">
+                                {activeNavItem.shortTitle}
+                            </span>
+                        </span>
+                        <ChevronDown
+                            className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
+                                mobileTocOpen ? "rotate-180" : ""
+                            }`}
+                        />
+                    </button>
+
+                    {mobileTocOpen && (
+                        <nav className="pb-3 pt-1 grid grid-cols-1 sm:grid-cols-2 gap-1 max-h-64 overflow-y-auto border-t border-slate-100 dark:border-zinc-800/60">
+                            {TIMELINE_NAV.map((item) => {
+                                const isActive = activeId === item.id;
+                                return (
+                                    <a
+                                        key={item.id}
+                                        href={`#${item.id}`}
+                                        onClick={() => setMobileTocOpen(false)}
+                                        className={`flex items-center gap-2 py-2 px-2.5 rounded-lg text-xs transition-colors ${
+                                            isActive
+                                                ? "bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-semibold"
+                                                : "text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-900"
+                                        }`}
+                                    >
+                                        <span className="font-mono text-[10px] opacity-75 w-12 shrink-0">
+                                            {item.date}
+                                        </span>
+                                        <span className="truncate">
+                                            {item.shortTitle}
+                                        </span>
+                                    </a>
+                                );
+                            })}
+                        </nav>
+                    )}
+                </div>
             </header>
 
             {/* Main Container */}
-            <div className="max-w-5xl mx-auto px-6 py-10 md:py-14">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 md:py-14">
                 {/* Hero Banner */}
                 <section className="pb-10 border-b border-slate-200 dark:border-zinc-800 space-y-6">
                     <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
@@ -423,7 +503,7 @@ export default function App() {
                         {/* Post 1 */}
                         <article
                             id="kicking-off"
-                            className="scroll-mt-24 p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
+                            className="scroll-mt-28 p-4 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
                         >
                             <div className="flex items-center gap-2 text-xs font-mono text-blue-600 dark:text-blue-400">
                                 <Calendar className="w-3.5 h-3.5" />
@@ -435,7 +515,7 @@ export default function App() {
                                 Kicking off GSoC 2026: Bridging Julia, PDEs, and
                                 Neural Operators
                             </h2>
-                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px]">
+                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px] break-words">
                                 <p>
                                     The Google Summer of Code 2026 has
                                     officially started! As summarized above,
@@ -478,7 +558,7 @@ export default function App() {
                         {/* Post 2 */}
                         <article
                             id="exploratory-phase"
-                            className="scroll-mt-24 p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
+                            className="scroll-mt-28 p-4 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
                         >
                             <div className="flex items-center gap-2 text-xs font-mono text-blue-600 dark:text-blue-400">
                                 <Calendar className="w-3.5 h-3.5" />
@@ -490,7 +570,7 @@ export default function App() {
                                 The Exploratory Phase: Theory, Pluto Notebooks,
                                 and Model Trade-offs
                             </h2>
-                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px]">
+                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px] break-words">
                                 <p>
                                     The coding phase is underway, starting with
                                     a strong focus on prototyping. To establish
@@ -567,7 +647,7 @@ export default function App() {
                         {/* Post 3 */}
                         <article
                             id="scaling-up"
-                            className="scroll-mt-24 p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
+                            className="scroll-mt-28 p-4 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
                         >
                             <div className="flex items-center gap-2 text-xs font-mono text-blue-600 dark:text-blue-400">
                                 <Calendar className="w-3.5 h-3.5" />
@@ -579,7 +659,7 @@ export default function App() {
                                 Scaling Up: DrWatson, Caching, and Building an
                                 Orchestrator Dashboard
                             </h2>
-                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px]">
+                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px] break-words">
                                 <p>
                                     As the complexity of the project grew, Pluto
                                     notebooks started to show their limits. I
@@ -683,7 +763,7 @@ export default function App() {
                         {/* Post 4 */}
                         <article
                             id="midterm-evaluation"
-                            className="scroll-mt-24 p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
+                            className="scroll-mt-28 p-4 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
                         >
                             <div className="flex items-center gap-2 text-xs font-mono text-blue-600 dark:text-blue-400">
                                 <Calendar className="w-3.5 h-3.5" />
@@ -695,7 +775,7 @@ export default function App() {
                                 Midterm Evaluation: Mini-Batches, Fine-Tuning,
                                 and XLA Compilation
                             </h2>
-                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px]">
+                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px] break-words">
                                 <p>
                                     Tomorrow is the Midterm Evaluation deadline,
                                     and the last two weeks have been an intense
@@ -721,7 +801,7 @@ export default function App() {
                                         processed at once. This means a tiny
                                         batch size of just 1 or 2 already pulls
                                         entire slices of the snapshot matrix.
-                                        <ul className="mt-2 space-y-2 pl-5 list-circle">
+                                        <ul className="mt-2 space-y-2 pl-5 list-[circle]">
                                             <li>
                                                 <strong className="text-slate-900 dark:text-zinc-100">
                                                     DeepONet:
@@ -828,7 +908,7 @@ export default function App() {
                         {/* Post 5 */}
                         <article
                             id="phase-1-wrap-up"
-                            className="scroll-mt-24 p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
+                            className="scroll-mt-28 p-4 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
                         >
                             <div className="flex items-center gap-2 text-xs font-mono text-blue-600 dark:text-blue-400">
                                 <Calendar className="w-3.5 h-3.5" />
@@ -839,7 +919,7 @@ export default function App() {
                             <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-zinc-100">
                                 Phase 1 Wrap-up & The GridapROMs Blueprint
                             </h2>
-                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px]">
+                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px] break-words">
                                 <p>
                                     The GSoC midterm evaluations are officially
                                     over, and it feels great to hit this
@@ -914,7 +994,7 @@ end`}
                         {/* Post 6 */}
                         <article
                             id="wiring-the-pipeline"
-                            className="scroll-mt-24 p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
+                            className="scroll-mt-28 p-4 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
                         >
                             <div className="flex items-center gap-2 text-xs font-mono text-blue-600 dark:text-blue-400">
                                 <Calendar className="w-3.5 h-3.5" />
@@ -926,7 +1006,7 @@ end`}
                                 Wiring the Pipeline: DeepONet and
                                 NeuralOpStrategy
                             </h2>
-                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px]">
+                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px] break-words">
                                 <p>
                                     Over the last couple of weeks, the focus has
                                     been entirely on turning those stubs into
@@ -1051,7 +1131,7 @@ end`}
                         {/* Post 7 */}
                         <article
                             id="transient-nomad-finetuning"
-                            className="scroll-mt-24 p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
+                            className="scroll-mt-28 p-4 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
                         >
                             <div className="flex items-center gap-2 text-xs font-mono text-blue-600 dark:text-blue-400">
                                 <Calendar className="w-3.5 h-3.5" />
@@ -1063,7 +1143,7 @@ end`}
                                 Expanding the Scope: NOMAD, Transient Problems,
                                 and Fine-Tuning
                             </h2>
-                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px]">
+                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px] break-words">
                                 <p>
                                     With the final deadline fast approaching, I
                                     spent the last couple of weeks sprinting to
@@ -1187,7 +1267,7 @@ new_op = reduced_operator(solver, feop_ext, s_ext, pretrained_op; update_stats=t
                         {/* Post 8 */}
                         <article
                             id="final-pr-and-nonlinearroms"
-                            className="scroll-mt-24 p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
+                            className="scroll-mt-28 p-4 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
                         >
                             <div className="flex items-center gap-2 text-xs font-mono text-blue-600 dark:text-blue-400">
                                 <Calendar className="w-3.5 h-3.5" />
@@ -1198,7 +1278,7 @@ new_op = reduced_operator(solver, feop_ext, s_ext, pretrained_op; update_stats=t
                             <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-zinc-100">
                                 The Final PR and a Change of Scenery
                             </h2>
-                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px]">
+                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px] break-words">
                                 <p>
                                     I submitted the final pull request wrapping
                                     up my GSoC 2026 project. The PR aggregates
@@ -1302,7 +1382,7 @@ x_approx, stats = solve(neural_solver, neural_rb_op, param_test)`}
                         {/* Post 9 */}
                         <article
                             id="beyond-gsoc"
-                            className="scroll-mt-24 p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
+                            className="scroll-mt-28 p-4 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
                         >
                             <div className="flex items-center gap-2 text-xs font-mono text-emerald-600 dark:text-emerald-400">
                                 <Sparkles className="w-3.5 h-3.5" />
@@ -1314,7 +1394,7 @@ x_approx, stats = solve(neural_solver, neural_rb_op, param_test)`}
                                 Beyond GSoC: Graph Neural Operators and a
                                 Kernel-Based Framework
                             </h2>
-                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px]">
+                            <div className="space-y-4 text-slate-600 dark:text-zinc-300 leading-relaxed text-[15px] break-words">
                                 <p>
                                     Even though my GSoC timeline officially
                                     ended in August, I wasn't quite ready to
@@ -1384,7 +1464,7 @@ x_approx, stats = solve(neural_solver, neural_rb_op, param_test)`}
                         {/* References Section */}
                         <section
                             id="references"
-                            className="scroll-mt-24 p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
+                            className="scroll-mt-28 p-4 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4"
                         >
                             <div className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-zinc-400">
                                 <BookOpen className="w-3.5 h-3.5" />
